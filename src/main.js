@@ -1,60 +1,75 @@
-import './style.css'
-import heroImg from './assets/hero.png'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.js'
+// main.js — Punto de entrada del juego
+// Conecta todos los módulos: estado global, Phaser, UI.
 
-document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+import Phaser from 'phaser';
 
-<div class="ticks"></div>
+// Motor de juego
+import { gameStore } from './game/gameState.js';
+import { BoardScene } from './game/board.js';
+import { LEVELS } from './game/levels.js';
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+// UI
+import { renderHUD, syncHUD } from './ui/hud.js';
+import { renderPalette, updatePaletteState } from './ui/palette.js';
+import { renderProgram, syncProgram } from './ui/program.js';
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+// Estilos
+import './styles/main.css';
 
-setupCounter(document.querySelector('#counter'))
+// ============================================================
+// ARRANQUE
+// ============================================================
+
+function bootstrap() {
+  // ---- 1. Cargar el primer nivel en el estado global ----
+  const firstLevel = LEVELS[0];
+  gameStore.getState().setLevel(firstLevel);
+
+  // ---- 2. Arrancar Phaser ----
+  const phaserGame = new Phaser.Game({
+    type: Phaser.AUTO,
+    parent: 'stage',
+    backgroundColor: '#0f172a',
+    scale: {
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
+      width: 640,
+      height: 640
+    },
+    scene: [BoardScene]
+  });
+
+  // ---- 3. Renderizar la UI ----
+  const hudEl = document.getElementById('hud');
+  const paletteEl = document.getElementById('palette');
+  const programEl = document.getElementById('program');
+
+  if (!hudEl || !paletteEl || !programEl) {
+    console.error('Faltan elementos HTML: hud, palette o program');
+    return;
+  }
+
+  renderHUD(hudEl);
+  renderPalette(paletteEl);
+  renderProgram(programEl);
+
+  // ---- 4. Sincronizar UI con el estado ----
+  // Cada vez que el estado global cambia, actualizamos las vistas.
+  gameStore.subscribe(() => {
+    syncHUD(hudEl);
+    syncProgram(programEl);
+    updatePaletteState(gameStore.getState().level);
+  });
+
+  // ---- 5. Cargar el siguiente nivel al hacer clic en un botón futuro ----
+  // (esto está preparado para la Fase 3)
+
+  console.log('🤖 Robotluz iniciado correctamente');
+}
+
+// Esperar a que el DOM esté listo
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootstrap);
+} else {
+  bootstrap();
+}
