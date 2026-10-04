@@ -1,13 +1,35 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>robotluz</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Robotluz: juego educativo para aprender programación jugando. Gratis, sin publicidad, en español." />
+  <meta name="theme-color" content="#0f172a" />
+
+  <title>Robotluz — Aprender a programar jugando</title>
+
+  <!-- Favicon (por ahora vacío, se reemplaza en Fase 3) -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <!-- Contenedor principal: layout de 3 filas x 2 columnas -->
+  <div id="app">
+
+    <!-- Fila 1: barra superior con botones y contador -->
+    <header id="hud"></header>
+
+    <!-- Fila 2 izquierda: tablero de Phaser -->
+    <main id="stage"></main>
+
+    <!-- Fila 2 derecha: paleta de instrucciones -->
+    <aside id="palette"></aside>
+
+    <!-- Fila 3: zona de programa con los 3 slots -->
+    <section id="program"></section>
+
+  </div>
+
+  <!-- Punto de entrada del juego -->
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>
