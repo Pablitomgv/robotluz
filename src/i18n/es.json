@@ -1,0 +1,12 @@
+{
+  "app": {
+    "title": "Robotluz",
+    "subtitle": "Enseñá a programar jugando"
+  },
+  "hud": {
+    "run": "Ejecutar",
+    "reset": "Reiniciar",
+    "next": "Siguiente",
+    "level": "Nivel"
+  }
+}

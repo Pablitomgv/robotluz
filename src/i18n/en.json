@@ -1,0 +1,12 @@
+{
+  "app": {
+    "title": "Robotluz",
+    "subtitle": "Teach programming by playing"
+  },
+  "hud": {
+    "run": "Run",
+    "reset": "Reset",
+    "next": "Next",
+    "level": "Level"
+  }
+}
